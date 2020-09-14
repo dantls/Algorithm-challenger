@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1600043127 source:c:\alg2\codeblocks\bemformada\main.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+

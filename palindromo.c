@@ -30,7 +30,7 @@ char desempilha(int *t, char P[MAX])
 int main(){
   setlocale(LC_ALL, "portuguese");
   
-  int P[MAX];
+  char P[MAX];
   int t;
   int palindromo;
 
