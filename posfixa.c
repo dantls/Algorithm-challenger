@@ -22,6 +22,10 @@ int precedencia(char op) {
     case '/': 
       return 2;
       break;
+      
+    case '^': 
+      return 3;
+      break;
   }
 }
 
@@ -80,7 +84,7 @@ int main(){
             do{
               aux = desempilha(&topoAux, pilhaAux);
               if(aux != '(')
-              empilha(&topoPosfixa, posfixa, aux);
+                empilha(&topoPosfixa, posfixa, aux);
             }while(aux != '(');
           break;
           
