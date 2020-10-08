@@ -1,19 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <locale.h>
 
 #define MAX 100
 #define CHAR_MIN '\0'
 
-#define NUMBER_OF_STRING 3
+#define NUMBER_OF_STRING 100
 #define MAX_STRING_SIZE 300
-
-
-
 
 int precedencia(char op) {
     switch (op) {
 
+    case ';': 
+      return -1;
+      break;
     case '(': 
       return 0;
       break;
@@ -26,6 +27,10 @@ int precedencia(char op) {
     case '*': 
     case '/': 
       return 2;
+      break;
+
+    case '^': 
+      return 3;
       break;
   }
 }
@@ -52,9 +57,9 @@ char desempilha(int *t, char P[MAX]){
 }
 
 void posfixa(char * expression){
-  
-  char posfixa[MAX],pilhaAux[MAX] , aux;
- 
+
+  char posfixa[MAX] = {},pilhaAux[MAX] = {} , aux;
+
   int topoPosfixa,topoAux, i;
 
   topoPosfixa = -1;
@@ -70,15 +75,13 @@ void posfixa(char * expression){
           case '(' :
             empilha(&topoAux, pilhaAux, expression[i]);
           break;
-
           case ')' :
             do{
               aux = desempilha(&topoAux, pilhaAux);
               if(aux != '(')
               empilha(&topoPosfixa, posfixa, aux);
             }while(aux != '(');
-          break;
-          
+          break;     
           default : 
             while(topoAux != -1 &&  precedencia(expression[i]) <= precedencia(pilhaAux[topoAux])){
                 aux = desempilha(&topoAux, pilhaAux);
@@ -92,47 +95,62 @@ void posfixa(char * expression){
   while (topoAux != -1)
      empilha(&topoPosfixa, posfixa, desempilha(&topoAux, pilhaAux));
 
-  printf("Expressao Infixa: %s\n", expression);
-  printf("Expressao Posfixa: %s\n", posfixa); 
+  printf("%s\n", posfixa); 
 
 }
 
-void mostrar(int qtde, char expression[][MAX_STRING_SIZE]){
-  int i;
-  for ( i = 0; i < qtde; i++)
-  {
-    printf("\nExpressoes: %s", expression[i]); 
-  }
-    printf("\n"); 
-  
-};
+void imprime(int lenght, char iMatriz[][MAX_STRING_SIZE]) 
+{
+   int i;
+   for (i=0; i < lenght; i++)
+   {
+      printf("%s\n", iMatriz[i]);
+   }
+}
 
 int main(){
   setlocale(LC_ALL, "portuguese");
+
+    FILE *ptArq;
+    ptArq = fopen("entrada.txt", "r");
+
+    int quantity ,i;
   
-  
+    fscanf(ptArq,"%d", &quantity);
 
-  int quantity ,i;
+    char expressions[quantity][MAX_STRING_SIZE];
+    
+    if(ptArq == NULL){
+        printf("Ocorreu um problema ao abrir o arquivo.\n");
+    }else{
+        int t, j = 0 ;
+        char linha[300];
+        while(fgets(linha, 300, ptArq) != NULL){
+          if (j == 0 ){
+          }else{
+            linha[strcspn(linha, "\n")] = 0;
+            t = j-1;
+            strcpy(expressions[t] , linha);
+          }
+          j++;
 
-  printf("\nDigite a quantidade:");
-  scanf("%d", &quantity);
- 
+       }
+        fclose(ptArq);
+    }
+    
+    //imprime(quantity, expressions);
 
-  char expressions[NUMBER_OF_STRING][MAX_STRING_SIZE];
-  
- 
-  
-  for(i=0; i < quantity; i++){
-    printf("\nDigite a expressao - %d:" , i+1);
-    scanf("%s",expressions[i]);
-  }
+    int y;
+    for (y= 0; y < 7; y++)
+    {
+     posfixa(expressions[y]);
+    }
 
-
-
-  mostrar(quantity, expressions);
-
-  //posfixa(expressions);
-
+    //posfixa(expressions[0]);
+    //posfixa(expressions[1]);
+    //posfixa(expressions[2]);
+    //posfixa(expressions[4]);
+    
   return 0;
 
 }
