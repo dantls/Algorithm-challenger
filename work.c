@@ -99,6 +99,66 @@ void posfixa(char * expression){
 
 }
 
+// void calculaPosfixa(char * expression){
+void calculaPosfixa(){
+  char expression[MAX_STRING_SIZE];
+
+  printf("\nDigite a expressao:");
+  scanf("%[^\n]", expression);
+
+  char pilhaAux[MAX] = {};
+
+  int topoAux, i,aux1,aux2;
+
+  topoAux = -1;
+
+  for (i = 0; expression[i] != '\0'; i++){
+        if ('0' <= expression[i] && expression[i] <= '9'){
+        empilha(&topoAux, pilhaAux, expression[i]); 
+      }else{
+        int resultado = 0;
+        char result;
+        switch ( expression[i] )
+        {
+          case '^' :
+            aux1 = atoi(desempilha(&topoAux, pilhaAux));
+            aux2 = atoi(desempilha(&topoAux, pilhaAux));
+            itoa(aux1^aux2 , result , 10);
+            empilha(&topoAux, pilhaAux, result);
+            break;
+            case '*' :
+              aux1 = atoi(desempilha(&topoAux, pilhaAux));
+              aux2 = atoi(desempilha(&topoAux, pilhaAux));
+              itoa(aux1*aux2 , result , 10);
+              empilha(&topoAux, pilhaAux, result);
+            break;
+            case '/' :
+              aux1 = atoi(desempilha(&topoAux, pilhaAux));
+              aux2 = atoi(desempilha(&topoAux, pilhaAux));
+              itoa(aux1/aux2 , result , 10);
+              empilha(&topoAux, pilhaAux, result);
+            break;
+            case '+' :
+              aux1 = atoi(desempilha(&topoAux, pilhaAux));
+              aux2 = atoi(desempilha(&topoAux, pilhaAux));
+              itoa(aux1+aux2 , result , 10);
+              empilha(&topoAux, pilhaAux, result);
+            break;
+            case '-' :
+              aux1 = atoi(desempilha(&topoAux, pilhaAux));
+              aux2 = atoi(desempilha(&topoAux, pilhaAux));
+              itoa(aux1-aux2 , result , 10);
+              empilha(&topoAux, pilhaAux, result);
+            break;
+         }
+      }
+  }
+
+   printf("%s\n", pilhaAux); 
+
+}
+
+
 void imprime(int lenght, char iMatriz[][MAX_STRING_SIZE]) 
 {
    int i;
@@ -140,15 +200,17 @@ int main(){
     
     //imprime(quantity, expressions);
 
-    int y;
-    for (y= 0; y < 7; y++)
-    {
-     posfixa(expressions[y]);
-    }
+    // int y;
+    // for (y= 0; y < 7; y++)
+    // {
+    //  posfixa(expressions[y]);
+    // }
+    calculaPosfixa();
+    //calculaPosfixa(expressions[0]);
 
-    //posfixa(expressions[0]);
-    //posfixa(expressions[1]);
-    //posfixa(expressions[2]);
+    // posfixa(expressions[0]);
+    // posfixa(expressions[1]);
+    // posfixa(expressions[2]);
     //posfixa(expressions[4]);
     
   return 0;
