@@ -12,9 +12,6 @@
 int precedencia(char op) {
     switch (op) {
 
-    case ';': 
-      return -1;
-      break;
     case '(': 
       return 0;
       break;
@@ -75,60 +72,73 @@ char desempilhaInt(int *t, int P[MAX]){
   return r;
 }
 
-char * posfixa(char * expression){
+char * posfixa(char *expression)
+{
 
-  char posfixa[MAX] = {},pilhaAux[MAX] = {} , aux;
+    char posfixa[MAX] = {}, pilhaAux[MAX] = {}, aux;
 
-  int topoPosfixa,topoAux, i;
+    int topoPosfixa, topoAux, i;
 
-  topoPosfixa = -1;
-  topoAux = -1;
+    topoPosfixa = -1;
+    topoAux = -1;
 
-  for (i = 0; expression[i] != '\0'; i++){
+    for (i = 0; expression[i] != '\0'; i++)
+    {
 
-      if ('0' <= expression[i] && expression[i] <= '9'){
-        empilha(&topoPosfixa, posfixa, expression[i]); 
-      }else{
-        switch ( expression[i] )
+        if (isdigit(expression[i]))
         {
-          case '(' :
-            empilha(&topoAux, pilhaAux, expression[i]);
-          break;
-          case ')' :
-            do{
-              aux = desempilha(&topoAux, pilhaAux);
-              if(aux != '(')
-              empilha(&topoPosfixa, posfixa, aux);
-            }while(aux != '(');
-          break;     
-          default : 
-            while(topoAux != -1 &&  precedencia(expression[i]) <= precedencia(pilhaAux[topoAux])){
-                aux = desempilha(&topoAux, pilhaAux);
-                empilha(&topoPosfixa, posfixa, aux);
-            };
-            empilha(&topoAux, pilhaAux, expression[i]);
-          break;
+            empilha(&topoPosfixa, posfixa, expression[i]);
         }
-      }
-  }
-  while (topoAux != -1)
-     empilha(&topoPosfixa, posfixa, desempilha(&topoAux, pilhaAux));
+        else
+        {
+            empilha(&topoPosfixa, posfixa, ' ');
+            switch (expression[i])
+            {
+            case '(':
+                empilha(&topoAux, pilhaAux, expression[i]);
+                break;
+            case ')':
+                do
+                {
+                    aux = desempilha(&topoAux, pilhaAux);
+                    if (aux != '('){
+                        empilha(&topoPosfixa, posfixa, aux);
+                    }
+                } while (aux != '(');
+                break;
+            default:
+                while (topoAux != -1 && precedencia(expression[i]) <= precedencia(pilhaAux[topoAux]))
+                {
+                    aux = desempilha(&topoAux, pilhaAux);
+                    empilha(&topoPosfixa, posfixa, aux);
+                };
+        
 
- 
+                empilha(&topoAux, pilhaAux, expression[i]);
+                break;
+            }
+        }
+    }
+    while (topoAux != -1)
+    {
+        empilha(&topoPosfixa, posfixa, ' ');
+        empilha(&topoPosfixa, posfixa, desempilha(&topoAux, pilhaAux));
 
- strcpy(expression, posfixa);
-
- return expression; 
-
+    }
+    
+    strcpy(expression , posfixa);
+    
+    return expression; 
 }
 
-//char * calculaPosfixa(char * expression){
-int calculaPosfixa(){
 
-  char expression[NUMBER_OF_STRING][NUMBER_OF_STRING] = {"20","4","+","\0"};
-  
+int calculaPosfixa(char expression[][MAX_STRING_SIZE]){
+
+  printf("Expressao dentro da calcula: %s\n", expression[0]);
+  printf("Expressao dentro da calcula: %s\n", expression[1]);
+  printf("Expressao dentro da calcula: %s\n", expression[2]);
+
   int var1 , var2, i, j ,  result;
-  char str1[300];
 
   char pilhaAux[MAX] = {};
   int pilhaAuxInt[MAX] = {};
@@ -153,9 +163,6 @@ int calculaPosfixa(){
                   var2 = desempilhaInt(&topoAuxInt, pilhaAuxInt);
                   result = var1 * var2;
                   empilhaInt(&topoAuxInt,pilhaAuxInt,result);
-
-
-
             }
             // else if (strcmp(expression[i] ,"^") == 0){
 
@@ -171,7 +178,6 @@ int calculaPosfixa(){
                   var2 = desempilhaInt(&topoAuxInt, pilhaAuxInt);
                   result =  var2 - var1;
                   empilhaInt(&topoAuxInt,pilhaAuxInt,result);
-
                  
             }else if (strcmp(expression[i] ,"+") == 0){
 
@@ -179,14 +185,12 @@ int calculaPosfixa(){
                   var2 = desempilhaInt(&topoAuxInt, pilhaAuxInt);
                   result =  var2 + var1;
                   empilhaInt(&topoAuxInt,pilhaAuxInt,result);
-
            
             }else if (strcmp(expression[i] ,"/") == 0){
                   var1 = desempilhaInt(&topoAuxInt, pilhaAuxInt);
                   var2 = desempilhaInt(&topoAuxInt, pilhaAuxInt);
                   result =  var2 / var1;
                   empilhaInt(&topoAuxInt,pilhaAuxInt,result);
-
 
             }else{
               empilhaInt(&topoAuxInt,pilhaAuxInt,atoi(expression[i]));
@@ -208,72 +212,109 @@ void imprime(int lenght, char iMatriz[][MAX_STRING_SIZE])
 
 int main(){
   
-  int teste = 0;
-  teste = calculaPosfixa();
+  FILE *ptArq;
+  ptArq = fopen("entrada.txt", "r");
 
-  printf("Resultado %d" , teste);
-    // FILE *ptArq;
-    // ptArq = fopen("entrada.txt", "r");
+  int quantity ,i;
 
-    // int quantity ,i;
-    // char str2[300] , *testeponteiro, testevariavel;
+  fscanf(ptArq,"%d", &quantity);
+
+  char expressions[quantity][MAX_STRING_SIZE];
   
-    // fscanf(ptArq,"%d", &quantity);
-
-    // char expressions[quantity][MAX_STRING_SIZE];
-    
-    // if(ptArq == NULL){
-    //     printf("Ocorreu um problema ao abrir o arquivo.\n");
-    // }else{
-    //     int t, j = 0 ;
-    //     char linha[300];
-    //     while(fgets(linha, 300, ptArq) != NULL){
-    //       if (j == 0 ){
-    //       }else{
-    //         linha[strcspn(linha, "\n")] = 0;
-    //         t = j-1;
-    //         strcpy(expressions[t] , linha);
-    //       }
-    //       j++;
-
-    //    }
-    //     fclose(ptArq);
-    // }
-    
-    // int d=0;
-    // int y;
-    // for(y=0 ; y < quantity; y++){
-    //   while (expressions[y][d] != '\n'){
-    //     printf("%c\n",expressions[d]);
-    //     d++;
-    //   }
-    // }
-    //imprime(quantity, expressions);
-
-    // int y;
-    // for (y= 0; y < 7; y++)
-    // {
-    //  posfixa(expressions[y]);
-    // }
-    //calculaPosfixa();
-
-    //--posfixa(expressions[4]);
-    //printf("%s",posfixa(expressions[4]));
-    //printf("%s",calculaPosfixa(posfixa(expressions[1])));
-    //rintf("%s",posfixa(expressions[0]));
-    //puts(*posfixa(expressions[0]));
+  if(ptArq == NULL){
+      printf("Ocorreu um problema ao abrir o arquivo.\n");
+  }else{
+      int t, j = 0 ;
+      char linha[300];
+      while(fgets(linha, 300, ptArq) != NULL){
+        if (j == 0 ){
+        }else{
+          linha[strcspn(linha, "\n")] = 0;
+          t = j-1;
+          strcpy(expressions[t] , linha);
+        }
+        j++;
+      }
+      fclose(ptArq);
+  }
 
 
-    //printf("%s",*(calculaPosfixa(str2)));
+  /* 
+    Envia expressão lida do arquivo
+  */
 
-    // posfixa(expressions[0]);
-    // posfixa(expressions[1]);
-    // posfixa(expressions[2]);
-    //posfixa(expressions[4]);
-     
- 
-    
+  printf("Expressao na main lida pelo arquivo : %s\n", expressions[0]);
+  printf("Expressao na main lida pelo arquivo : %s\n", expressions[1]);
+  printf("Expressao na main lida pelo arquivo : %s\n", expressions[2]);
+
+
+
+
+  /* 
+    Envia expressão para o calculaPosfixa e imprime resultado
+  */
+
+  char expression[NUMBER_OF_STRING][MAX_STRING_SIZE] = {"20","4","*","\0"};
+  printf("Expressao na main : %s\n", expression[0]);
+  printf("Expressao na main : %s\n", expression[1]);
+  printf("Expressao na main : %s\n", expression[2]);
+  printf("%d\n", calculaPosfixa(expression));
+
+
+  /* 
+    Gera Posfixa
+  */
+
+   char expressaoPosfixa[300];
+   strcpy (expressaoPosfixa, posfixa(expressions[4]));
+   printf("Resultado posfixa: %s", expressaoPosfixa);
+   
   return 0;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
