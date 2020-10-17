@@ -60,7 +60,7 @@ char desempilha(int *t, char P[MAX]){
   }
   return r;
 }
-char desempilhaInt(int *t, int P[MAX]){
+int desempilhaInt(int *t, int P[MAX]){
   int r;
   if (*t != -1) {
     r = P[*t];
