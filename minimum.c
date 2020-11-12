@@ -22,11 +22,11 @@ int main(){
      return arr[0];
    }else {
      aux = minimum(index -1 , arr);
-     if(aux < arr[index-1]){
+     if(aux < arr[index-1])
        return aux;
-     }else{
+     
        return arr[index-1];
-     }
+     
    }
  };
  
