@@ -31,5 +31,50 @@ void read(int *vet, int n){
   for(p=vet; p < vet+n; p++){
     scanf("%d ", p);
   }
+}
 
+int *allocate(int n){
+  int *element;
+  element = (int*) malloc(sizeof(int) * n);
+  if(!element){
+    fprintf(stderr,"Erro ao alocar memoria. \n");
+    exit(0);
+  }
+  return element;
+} 
+
+void liberate(int *vet){
+  free(vet);
+}
+
+void copyK(int k, int *vetA, int *vetB){
+  int i ,*ptA , *ptB;
+  for(i=0 , ptA = vetA , ptB=vetB ;i<k; i++, ptA++, ptB++){
+    *ptB = *ptA;
+  }
+}
+
+void revertK(int k, int *vetA , int *vetB){
+  int i , *ptA , *ptB;
+  for(i=0 , ptA = vetA + k-1, ptB=vetB ; i<k ; i++, ptA--, ptB++){
+    *ptB = *ptA;
+  }
+}
+
+int *clone( int *vet , int n){
+  int *cl;
+  cl = aloca(n);
+  copia_k (n, vet, cl);
+
+  return cl;
+}
+
+int checkOrdem(int *vet , int n){
+  int *p , *q;
+  for (p=vet , q= vet+1; q<vet+n; p++, q++){
+    if (*p > *q){
+      return 0;
+    }
+    return 1;
+  }
 }
